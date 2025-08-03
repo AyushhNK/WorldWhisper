@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WorldWhisper.Data;
 using WorldWhisper.Hubs;
 using WorldWhisper.Models;
+using WorldWhisper.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>

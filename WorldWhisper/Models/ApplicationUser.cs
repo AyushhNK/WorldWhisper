@@ -4,5 +4,6 @@ namespace WorldWhisper.Models
 {
     public class ApplicationUser:IdentityUser
     {
+
     }
 }

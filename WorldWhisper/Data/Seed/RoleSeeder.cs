@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace ThemjoTradersBackend.Data.Seed
+namespace WorldWhisper.Data.Seed
 {
     public static class RoleSeeder
     {
