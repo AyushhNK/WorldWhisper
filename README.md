@@ -8,7 +8,6 @@ A modern real-time chat application built with .NET WebAPI and SignalR, featurin
 - **User authentication** with JWT tokens
 - **Role-based access control**
 - **Instant message delivery**
-- **Automatic reconnection** handling
 - **Cross-platform compatibility**
 - **RESTful API endpoints**
 
