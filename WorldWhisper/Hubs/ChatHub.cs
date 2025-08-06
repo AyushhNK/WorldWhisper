@@ -8,6 +8,10 @@ namespace WorldWhisper.Hubs
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
+        public Task SendPrivateMessage(string user, string message)
+        {
+            return Clients.User(user).SendAsync("ReceiveMessage", message);
+        }
     }
 
 }
