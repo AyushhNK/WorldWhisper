@@ -1,17 +1,45 @@
-﻿using Microsoft.AspNetCore.SignalR;
-namespace WorldWhisper.Hubs
+﻿public class ChatHub : Hub
 {
+    // Stores userId -> connectionId
+    private static readonly Dictionary<string, string> _connections = new();
 
-    public class ChatHub : Hub
+    public override Task OnConnectedAsync()
     {
-        public async Task SendMessage(string user, string message)
+        var userId = Context.GetHttpContext()?.Request.Query["userId"].ToString();
+
+        if (!string.IsNullOrWhiteSpace(userId))
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            _connections[userId] = Context.ConnectionId;
         }
-        public Task SendPrivateMessage(string user, string message)
-        {
-            return Clients.User(user).SendAsync("ReceiveMessage", message);
-        }
+
+        return base.OnConnectedAsync();
     }
 
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        var userId = _connections.FirstOrDefault(x => x.Value == Context.ConnectionId).Key;
+        if (userId != null)
+        {
+            _connections.Remove(userId);
+        }
+
+        return base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task SendPrivateMessage(string senderId, string receiverId, string message)
+    {
+        // Send to receiver if online
+        if (_connections.TryGetValue(receiverId, out string receiverConnId))
+        {
+            await Clients.Client(receiverConnId).SendAsync("ReceiveMessage", senderId, message);
+        }
+
+        // Send confirmation to sender
+        if (_connections.TryGetValue(senderId, out string senderConnId))
+        {
+            await Clients.Client(senderConnId).SendAsync("MessageSent", receiverId, message);
+        }
+
+        // Optionally: Store message in DB
+    }
 }
